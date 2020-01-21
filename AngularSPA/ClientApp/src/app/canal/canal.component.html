@@ -1,0 +1,55 @@
+<h1 id="tableLabel">Histórico de Busca de Canais do YouTube</h1>
+
+<div class="input-group mb-3">
+  <input type="text" class="form-control" [(ngModel)]="searchQuery" placeholder="Digite o nome do canal que deseja procurar" aria-label="Digite o vídeo ou canal que deseja procurar" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" (click)="startSearch()" type="button">Pesquisar</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-2">
+    <div class="form-group">
+      <label for="optPageSize">Resultados por Página</label>
+      <select class="form-control" id="optPageSize" [(ngModel)]="pageSize">
+        <option>5</option>
+        <option>10</option>
+        <option>20</option>
+        <option>30</option>
+        <option>40</option>
+        <option>50</option>
+      </select>
+    </div>
+  </div>
+
+</div>
+
+<p *ngIf="!resposta.data"><em>Carregando...</em></p>
+
+<div *ngIf="loading">
+  <div class="spinner-grow text-muted"></div>  <div class="spinner-grow text-primary"></div>  <div class="spinner-grow text-success"></div>
+  <div class="spinner-grow text-info"></div>  <div class="spinner-grow text-warning"></div>  <div class="spinner-grow text-danger"></div>
+  <div class="spinner-grow text-secondary"></div> <div class="spinner-grow text-dark"></div>  <div class="spinner-grow text-light"></div>
+</div>
+
+<div *ngIf="resposta.data && !loading">
+  <div class="card" *ngFor="let item of resposta.data">
+    <div class="card-body">
+      <div style="float:left; margin-right:15px">
+        <img class="card-img-bottom" src="{{ item.imagem }}" alt="Card image cap">
+        <a [routerLink]="['/canal-details', item.id]" [queryParams]="{pageSize: pageSize}">Detalhes</a>
+      </div>
+      <div style="width: 60%; margin: 0 auto; text-align: left">
+        <h5 class="card-title">CANAL: {{ item.title }}</h5>
+        <p class="card-text">{{ item.descricao }}</p>
+        <p class="card-text"><small class="text-muted">{{ item.publicadoEm.toLocaleString() }}</small></p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:15px">
+    <ul class="pagination">
+      <li class="page-item" [ngClass]="!resposta.hasPreviousPage ? 'disabled': null"><button type="button" class="page-link" [disabled]="!resposta.hasPreviousPage" (click)="priorPage()">Anterior</button></li>
+      <li class="page-item active"><button type="button" class="page-link"> Página {{displayPageIndex}} </button></li>
+      <li class="page-item" [ngClass]="!resposta.hasNextPage ? 'disabled': null"><button type="button" class="page-link" [disabled]="!resposta.hasNextPage" (click)="nextPage()">Próximo</button></li>
+    </ul>
+  </div>
+</div>

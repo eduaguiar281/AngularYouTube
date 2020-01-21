@@ -1,0 +1,37 @@
+<h1 id="tableLabel">Buscar Vídeos/Canais YouTube</h1>
+
+<div class="input-group mb-3">
+  <input type="text" class="form-control" [(ngModel)]="searchQuery" placeholder="Digite o vídeo ou canal que deseja procurar" aria-label="Digite o vídeo ou canal que deseja procurar" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" (click)="startSearch()" type="button">Pesquisar</button>
+  </div>
+</div>
+
+<p *ngIf="!resposta.data.items"><em>Carregando...</em></p>
+
+<div *ngIf="loading">
+  <div class="spinner-grow text-muted"></div>  <div class="spinner-grow text-primary"></div>  <div class="spinner-grow text-success"></div>
+  <div class="spinner-grow text-info"></div>  <div class="spinner-grow text-warning"></div>  <div class="spinner-grow text-danger"></div>
+  <div class="spinner-grow text-secondary"></div> <div class="spinner-grow text-dark"></div>  <div class="spinner-grow text-light"></div>
+</div>
+
+<div *ngIf="resposta.data.items && !loading">
+    <div class="card" *ngFor="let item of resposta.data.items">
+      <div class="card-body">
+        <div style="float:left; margin-right:15px">
+          <img class="card-img-bottom" src="{{ item.imagemUrl }}" alt="Card image cap">
+        </div>
+        <div style="width: 60%; margin: 0 auto; text-align: left">
+          <h5 class="card-title">{{item.tipo == 0 ? "VÍDEO: " : "CANAL: "}}{{ item.titulo }}</h5>
+          <p class="card-text">{{ item.descricao }}</p>
+          <p class="card-text"><small class="text-muted">{{ item.publicadoEm.toLocaleString() }}</small></p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:15px">
+        <ul class="pagination">
+          <li class="page-item" [ngClass]="!hasPrior ? 'disabled': null"><button type="button" class="page-link" [disabled]="!hasPrior" (click)="priorPage()" >Anterior</button></li>
+          <li class="page-item" [ngClass]="!hasNext ? 'disabled': null"><button type="button" class="page-link" [disabled]="!hasNext" (click)="nextPage()">Próximo</button></li>
+        </ul>
+    </div>
+</div>
