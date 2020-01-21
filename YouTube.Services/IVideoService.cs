@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver.Linq;
+﻿using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace YouTubeApp.Services
         Task<Video> GetVideoByIdAsync(string id);
 
         IMongoQueryable<Video> GetQuery();
+
+        IMongoCollection<Video> GetCollection();
 
     }
 }

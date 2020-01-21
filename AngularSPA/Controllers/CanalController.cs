@@ -10,6 +10,7 @@ using MongoDB.Driver.Linq;
 using YouTubeApp.Core.Infrastructure;
 using YouTubeApp.Core.Models;
 using YouTubeApp.Services;
+using YouTubeApp.Services.ViewModel;
 
 namespace AngularSPA.Controllers
 {
@@ -17,10 +18,12 @@ namespace AngularSPA.Controllers
     [ApiController]
     public class CanalController : ControllerBase
     {
-        private readonly ICanalService _canalService; 
-        public CanalController(ICanalService canalService)
+        private readonly ICanalService _canalService;
+        private readonly IVideoService _videoService;
+        public CanalController(ICanalService canalService, IVideoService videoService)
         {
             _canalService = canalService;
+            _videoService = videoService;
         }
 
         // GET: api/Canal
@@ -93,5 +96,18 @@ namespace AngularSPA.Controllers
             };
             return Ok(result);
         }
+
+        [HttpGet("{canalId}/videos")]
+        public async Task<IActionResult> GetVideos(string canalId)
+        {
+            var result = new ResponseRoot<IList<Video>>
+            {
+                Data = await _videoService.GetVideosAsync(w => w.CanalId == canalId),
+                Success = true
+
+            };
+            return Ok(result);
+        }
+
     }
 }

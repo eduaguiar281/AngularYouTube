@@ -7,22 +7,21 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { YoutubeSearchComponent } from './youtube-search/youtube-search.component';
 import { CanalComponent } from './canal/canal.component';
 import { CanalDetailsComponent } from './canal-details/canal-details.component';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     YoutubeSearchComponent,
     CanalComponent,
-    CanalDetailsComponent
+    CanalDetailsComponent,
+    VideoComponent
+
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -30,11 +29,10 @@ import { CanalDetailsComponent } from './canal-details/canal-details.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
       { path: 'youtube-search', component: YoutubeSearchComponent },
       { path: 'canal', component: CanalComponent },
-      { path: 'canal-details/:id', component: CanalDetailsComponent },
+      { path: 'canal-details', component: CanalDetailsComponent },
+      { path: 'video', component: VideoComponent },
     ])
   ],
   providers: [],

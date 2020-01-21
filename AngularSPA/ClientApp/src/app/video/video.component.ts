@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-    selector: 'app-canal',
-    templateUrl: './canal.component.html'
+    selector: 'app-video',
+    templateUrl: './video.component.html'
 })
-export class CanalComponent {
+export class VideoComponent {
     constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, private route: ActivatedRoute,
         private router: Router) {
         this._baseUrl = baseUrl;
@@ -15,7 +15,7 @@ export class CanalComponent {
         this.pageSize = 5;
         this.pageIndex = 0;
 
-        
+
         if (this.route.snapshot.paramMap.get('pageSize') != null ||
             this.route.snapshot.paramMap.get('pageIndex') != null ||
             this.route.snapshot.paramMap.get('searchQuery') != null) {
@@ -29,7 +29,7 @@ export class CanalComponent {
     }
     _http: HttpClient;
     _baseUrl: string;
-    public resposta: ResultSet;
+    public resposta: ResponseVideo;
     public searchQuery: string;
     public pageSize: number;
     public pageIndex: number;
@@ -54,7 +54,7 @@ export class CanalComponent {
 
     public startSearch() {
         this.loading = true;
-        var service = 'api/v1/Canal/?pageSize=' + this.pageSize;// + this.searchQuery;
+        var service = 'api/v1/Video/?pageSize=' + this.pageSize;// + this.searchQuery;
         if (this.pageIndex > 0) {
             service = service + '&pageIndex=' + this.pageIndex;
         }
@@ -63,44 +63,35 @@ export class CanalComponent {
         }
 
 
-        this._http.get<ResultSet>(this._baseUrl + service).subscribe(result => {
+        this._http.get<ResponseVideo>(this._baseUrl + service).subscribe(result => {
             this.resposta = result;
             this.displayPageIndex = result.pageIndex + 1;
             this.pageIndex = result.pageIndex;
             this.loading = false;
         }, error => {
             console.error(error);
-            alert('Ocorreu um erro inesperado ao pesquisar canais!');
-                this.loading = false;
+            alert('Ocorreu um erro inesperado ao pesquisar videos!');
+            this.loading = false;
         });
 
     }
 
-    gotoDetails(canal: Canal) {
-        let canalId = canal ? canal.id : null;
+    gotoDetails(video: Video) {
+        let videoId = video ? video.id : null;
 
         if (this.searchQuery != null) {
-            this.router.navigate(['/canal-details', { id: canalId, pageSize: this.pageSize, pageIndex: this.pageIndex, searchQuery: this.searchQuery }]);
+            this.router.navigate(['/video-details', { id: videoId, pageSize: this.pageSize, pageIndex: this.pageIndex, searchQuery: this.searchQuery }]);
         }
         else {
-            this.router.navigate(['/canal-details', { id: canalId, pageSize: this.pageSize, pageIndex: this.pageIndex }]);
+            this.router.navigate(['/video-details', { id: videoId, pageSize: this.pageSize, pageIndex: this.pageIndex }]);
         }
     }
 
 
 }
 
-interface Canal {
-    id: string;
-    channelId: string;
-    title: string;
-    descricao: string;
-    imagem: string;
-    publicadoEm: Date;
-}
-
-interface ResultSet {
-    data: Canal[];
+interface ResponseVideo {
+    data: Video[];
     success: boolean;
     message: string;
     pageIndex: number;
@@ -109,4 +100,18 @@ interface ResultSet {
     totalPages: number;
     hasPreviousPage: number;
     hasNextPage: number;
+}
+
+interface Video {
+    id: string;
+    videoId: string;
+    canalId: string;
+    titulo: string;
+    descricao: string;
+    publicadoEm: string;
+    imagemUrl: string;
+    quantidadeLike: number;
+    quantidadeDeslike: number;
+    quantidadeComentario: number;
+    quantidadeVisualizacao: number;
 }

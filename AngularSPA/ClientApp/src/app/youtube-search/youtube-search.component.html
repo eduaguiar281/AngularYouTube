@@ -24,7 +24,8 @@
         <div style="width: 60%; margin: 0 auto; text-align: left">
           <h5 class="card-title">{{item.tipo == 0 ? "VÍDEO: " : "CANAL: "}}{{ item.titulo }}</h5>
           <p class="card-text">{{ item.descricao }}</p>
-          <p class="card-text"><small class="text-muted">{{ item.publicadoEm.toLocaleString() }}</small></p>
+          <p class="card-text"><small class="text-muted">{{item.tipo == 0 ? "Publicado " : "Criado "}} em {{ item.publicadoEm | date: 'dd/MM/yyyy hh:mm' }}</small></p>
+
         </div>
       </div>
     </div>

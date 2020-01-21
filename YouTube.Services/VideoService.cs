@@ -92,5 +92,9 @@ namespace YouTubeApp.Services
             return _repository.Table;
         }
 
+        public IMongoCollection<Video> GetCollection()
+        {
+            return _repository.Collection;
+        }
     }
 }

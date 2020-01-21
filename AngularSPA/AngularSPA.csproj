@@ -26,6 +26,7 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\canal-details\canal-details.component.ts" />
     <None Remove="ClientApp\src\app\canal\canal.component.ts" />
+    <None Remove="ClientApp\src\app\video\video.component.ts" />
     <None Remove="ClientApp\src\app\youtube-search\youtube-search.component.ts" />
   </ItemGroup>
 
@@ -37,6 +38,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\canal-details\canal-details.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\canal\canal.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\video\video.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\youtube-search\youtube-search.component.ts" />
   </ItemGroup>
 

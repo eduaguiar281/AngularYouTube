@@ -1,3 +1,38 @@
-<h1>{{id}}</h1>
+<div class="container" style="margin:10px;">
+  <button type="button" class="btn btn-outline-secondary" (click)="backClicked()">Voltar</button>
+</div>
+<div class="container">
+  <div style="float:left; margin:70px">
+    <img class="card-img-bottom" src="{{respostaCanal.data.imagem}}" alt="Card image cap">
+  </div>
 
-<button type="button" class="btn-primary" (click)="backClicked()">VOLTAR</button>
+  <div class="jumbotron">
+    <h1>{{respostaCanal.data.title}}</h1>
+    <p class="card-text"><small class="text-muted">Publicado em: {{ respostaCanal.data.publicadoEm | date: 'dd/MM/yyyy hh:mm' }}</small></p>
+  </div>
+  <p></p>
+  <p>{{respostaCanal.data.descricao}}</p>
+</div>
+
+<div class="container" *ngIf="hasVideo">
+  <div clas="card-footer"><h2>Vídeos</h2></div>
+  <div class="card" *ngFor="let item of respostaVideo.data">
+    <div class="card-body">
+      <div style="float:left; margin-right:15px">
+        <img class="card-img-bottom" [src]="item.imagemUrl" alt="Card image cap">
+      </div>
+      <div style="width: 60%; margin: 0 auto; text-align: left">
+        <h5 class="card-title">Título: {{ item.titulo }}</h5>
+        <p class="card-text">{{ item.descricao }}</p>
+        <p class="card-text"><small class="text-muted">Publicado em: {{ item.publicadoEm | date: 'dd/MM/yyyy hh:mm' }}</small></p>
+        <!--<button type="button" class="btn btn-outline-secondary" style="margin-top:5px">Detalhes</button>-->
+      </div>
+    </div>
+  </div>
+  <div class="card-footer"></div>
+
+</div>
+
+
+
+

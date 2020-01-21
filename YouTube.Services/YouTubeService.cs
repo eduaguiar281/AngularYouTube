@@ -63,7 +63,7 @@ namespace YouTubeApp.Services
             {
                 YoutubeChannelId = channel.Id,
                 Titulo = channel.Snippet.Title,
-                ImagemUrl = channel.Snippet.Thumbnails.Default__.Url,
+                ImagemUrl = channel.Snippet.Thumbnails.Default__.Url.Replace("https", "http"),
                 Descricao = channel.Snippet.Description,
                 PublicadoEm = channel.Snippet.PublishedAt
             };
@@ -76,7 +76,7 @@ namespace YouTubeApp.Services
                 YoutubeVideoId = video.Id,
                 YoutubeChannelId = video.Snippet.ChannelId,
                 Titulo = video.Snippet.Title,
-                ImagemUrl = video.Snippet.Thumbnails.Default__.Url,
+                ImagemUrl = video.Snippet.Thumbnails.Default__.Url.Replace("https", "http"),
                 Descricao = video.Snippet.Description,
                 PublicadoEm = video.Snippet.PublishedAt,
                 Definicao = video.ContentDetails.Definition,
@@ -124,7 +124,7 @@ namespace YouTubeApp.Services
                             YoutubeVideoId = searchResult.Id.VideoId,
                             Descricao = searchResult.Snippet.Description,
                             Titulo = searchResult.Snippet.Title,
-                            ImagemUrl = searchResult.Snippet.Thumbnails?.Default__?.Url,
+                            ImagemUrl = searchResult.Snippet.Thumbnails?.Default__?.Url.Replace("https", "http"),
                             PublicadoEm = searchResult.Snippet.PublishedAt 
                         });
                         break;
@@ -135,7 +135,7 @@ namespace YouTubeApp.Services
                             YoutubeChannelId = searchResult.Id.ChannelId,
                             Descricao = searchResult.Snippet.Description,
                             Titulo = searchResult.Snippet.Title,
-                            ImagemUrl = searchResult.Snippet.Thumbnails?.Default__?.Url,
+                            ImagemUrl = searchResult.Snippet.Thumbnails?.Default__?.Url.Replace("https", "http"),
                             PublicadoEm = searchResult.Snippet.PublishedAt
                         });
                         break;

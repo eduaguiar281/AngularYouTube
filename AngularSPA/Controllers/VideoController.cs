@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AngularSPA.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using YouTubeApp.Core.Infrastructure;
 using YouTubeApp.Core.Models;
 using YouTubeApp.Services;
@@ -23,13 +25,19 @@ namespace YouTubeApp.Controllers
 
         // GET: api/Video
         [HttpGet]
-        public async Task<IActionResult> Get(int? pageSize, int? pageIndex)
+        public async Task<IActionResult> Get(int? pageSize, int? pageIndex, string queryString)
         {
             if (pageSize == null)
             {
+                IList<Video> list = null;
+                if (string.IsNullOrEmpty(queryString))
+                    list = await _videoService.GetVideosAsync();
+                else
+                    list = await _videoService.GetVideosAsync(w => w.Titulo.Contains(queryString));
+
                 var result = new ResponseRoot<IList<Video>>
                 {
-                    Data = await _videoService.GetVideosAsync(),
+                    Data = list,
                     Success = true
                 };
                 return Ok(result);
@@ -38,18 +46,40 @@ namespace YouTubeApp.Controllers
             {
                 if (pageIndex == null)
                     pageIndex = 0;
-                var query = _videoService.GetQuery();
-                var pagedList = await PagedList<Video>.Create(query, pageIndex.Value, pageSize.Value);
-                var result = new ResponseRoot<PagedList<Video>>
-                {
-                    Data = pagedList,
-                    PageIndex = pagedList.PageIndex,
-                    PageSize = pagedList.PageSize,
-                    TotalCount = pagedList.TotalCount,
-                    TotalPages = pagedList.TotalPages,
-                    Success = true
 
-                };
+                IMongoQueryable<Video> query = null;
+                ResponseRoot<PagedList<Video>> result = null;
+                if (string.IsNullOrEmpty(queryString))
+                {
+                    query = _videoService.GetQuery();
+                    var pagedList = await PagedList<Video>.Create(query, pageIndex.Value, pageSize.Value);
+                    result = new ResponseRoot<PagedList<Video>>
+                    {
+                        Data = pagedList,
+                        PageIndex = pagedList.PageIndex,
+                        PageSize = pagedList.PageSize,
+                        TotalCount = pagedList.TotalCount,
+                        TotalPages = pagedList.TotalPages,
+                        Success = true
+                    };
+                }
+                else
+                {
+                    var builder = Builders<Video>.Filter;
+                    var builderSort = Builders<Video>.Sort;
+                    var filter = builder.Where(x => x.Titulo.Contains(queryString));
+                    var sort = builderSort.Ascending(f => f.Titulo);
+                    var pagedList = await PagedList<Video>.Create(_videoService.GetCollection(), filter, sort, pageIndex.Value, pageSize.Value);
+                    result = new ResponseRoot<PagedList<Video>>
+                    {
+                        Data = pagedList,
+                        PageIndex = pagedList.PageIndex,
+                        PageSize = pagedList.PageSize,
+                        TotalCount = pagedList.TotalCount,
+                        TotalPages = pagedList.TotalPages,
+                        Success = true
+                    };
+                }
                 return Ok(result);
             }
         }
@@ -66,5 +96,6 @@ namespace YouTubeApp.Controllers
             };
             return Ok(result);
         }
+
     }
 }
