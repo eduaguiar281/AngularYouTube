@@ -1,7 +1,7 @@
 <h1 id="tableLabel">Histórico de Busca de Vídeos do YouTube</h1>
 
 <div class="input-group mb-3">
-  <input type="text" class="form-control" [(ngModel)]="searchQuery" placeholder="Digite o nome do canal que deseja procurar" aria-label="Digite o vídeo que deseja procurar" aria-describedby="basic-addon2">
+  <input type="text" class="form-control" [(ngModel)]="searchQuery" placeholder="Digite o nome do vídeo que deseja procurar" aria-label="Digite o vídeo que deseja procurar" aria-describedby="basic-addon2">
   <div class="input-group-append">
     <button class="btn btn-outline-secondary" (click)="startSearch()" type="button">Pesquisar</button>
   </div>
@@ -35,7 +35,7 @@
   <div class="card" *ngFor="let item of resposta.data">
     <div class="card-body">
       <div style="float:left; margin-right:15px">
-        <img class="card-img-bottom" [src]="item.imagem" alt="Card image cap">
+        <img class="card-img-bottom" [src]="item.imagemUrl" alt="Card image cap">
       </div>
       <div style="width: 60%; margin: 0 auto; text-align: left">
         <h5 class="card-title">Vídeo: {{ item.title }}</h5>
@@ -43,6 +43,7 @@
         <p class="card-text"><small class="text-muted">Publicado em: {{ item.publicadoEm | date: 'dd/MM/yyyy hh:mm' }}</small></p>
         <div class="row">
             <div class="col-sm-3">
+              <i class='far fa-comments'></i>
               <i style='font-size:24px' class='far'>&#xf086; {{quantidadeComentario}}</i>
             </div>
             <div class="col-sm-3">
