@@ -1,0 +1,55 @@
+<script>
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+<div class="container" style="margin:10px;">
+  <button type="button" class="btn btn-outline-secondary" (click)="backClicked()">Voltar</button>
+</div>
+<div class="container">
+  <div style="float:left; margin:70px">
+    <img class="card-img-bottom" src="{{respostaVideo.data.imagemUrl}}" alt="Card image cap">
+  </div>
+
+  <div class="jumbotron">
+    <h1>{{respostaVideo.data.titulo}}</h1>
+    <p class="card-text"><small class="text-muted">Publicado em: {{ respostaVideo.data.publicadoEm | date: 'dd/MM/yyyy hh:mm' }}</small></p>
+  </div>
+  <p></p>
+  <div class="row" style="margin-top:5px;">
+    <div class="col-sm-3">
+      <img class="icon-page" data-toggle="tooltip" data-placement="top" title="Comentários!" src="/custom-content/dialogue.svg" />
+      <span class="badge badge-primary page-badge" data-toggle="tooltip" data-placement="top" title="Comentários!">{{respostaVideo.data.quantidadeComentario}}</span>
+    </div>
+    <div class="col-sm-3">
+      <img class="icon-page" src="/custom-content/like.svg" data-toggle="tooltip" data-placement="top" title="Curtidas!" />
+      <span class="badge badge-success page-badge" data-toggle="tooltip" data-placement="top" title="Curtidas!">{{respostaVideo.data.quantidadeLike}}</span>
+    </div>
+    <div class="col-sm-3">
+      <img class="icon-page page-badge" src="/custom-content/bad.svg" data-toggle="tooltip" data-placement="top" title="Rejeição" />
+      <span class="badge badge-danger page-badge" data-toggle="tooltip" data-placement="top" title="Rejeição">{{respostaVideo.data.quantidadeDeslike}}</span>
+    </div>
+    <div class="col-sm-3">
+      <img class="icon-page" src="/custom-content/eye.svg" data-toggle="tooltip" data-placement="top" title="Visualização" />
+      <span class="badge badge-primary page-badge" data-toggle="tooltip" data-placement="top" title="Visualização">{{respostaVideo.data.quantidadeVisualizacao}}</span>
+    </div>
+  </div>
+  <div class="row" style="margin-top:15px">
+    <div class="col-sm-3">
+      <span><strong>Idioma: </strong></span>
+      <span class="badge badge-primary page-badge">{{respostaVideo.data.idioma}}</span>
+    </div>
+  </div>
+  <div class="row" style="margin-top:15px; margin-bottom:25px;">
+    <div class="col-sm-3">
+      <span><strong>Resulução: </strong></span>
+      <span class="badge badge-success page-badge">{{respostaVideo.data.definicao}}</span>
+    </div>
+  </div>
+  <p>{{respostaVideo.data.descricao}}</p>
+  <p></p>
+
+</div>
+
+
+

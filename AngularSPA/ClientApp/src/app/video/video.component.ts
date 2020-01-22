@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-video',
-    templateUrl: './video.component.html'
+    templateUrl: './video.component.html',
+    styleUrls: ['./video.component.css']
 })
 export class VideoComponent {
     constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, private route: ActivatedRoute,
@@ -35,8 +36,12 @@ export class VideoComponent {
     public pageIndex: number;
     public displayPageIndex: number;
     public loading: boolean;
-
-    //pageSize: this.pageSize, pageIndex: this.pageIndex, searchQuery: this.searchQuery
+   
+    public onPageSizeChange(newValue) {
+        this.pageSize = newValue;
+        this.pageIndex = 0;
+        this.startSearch();
+    }
 
     public nextPage() {
         if (!this.resposta || !this.resposta.hasNextPage)
@@ -62,7 +67,6 @@ export class VideoComponent {
             service = service + '&queryString=' + this.searchQuery;
         }
 
-
         this._http.get<ResponseVideo>(this._baseUrl + service).subscribe(result => {
             this.resposta = result;
             this.displayPageIndex = result.pageIndex + 1;
@@ -87,6 +91,14 @@ export class VideoComponent {
         }
     }
 
+    truncateText(value, maxLength) {
+        let truncated = value;
+
+        if (truncated.length > maxLength) {
+           truncated = truncated.substr(0, maxLength) + '...';
+        } 
+        return truncated;
+    }
 
 }
 
@@ -102,7 +114,7 @@ interface ResponseVideo {
     hasNextPage: number;
 }
 
-interface Video {
+export interface Video {
     id: string;
     videoId: string;
     canalId: string;
@@ -114,4 +126,6 @@ interface Video {
     quantidadeDeslike: number;
     quantidadeComentario: number;
     quantidadeVisualizacao: number;
+    idioma: string;
+    definicao: string;
 }

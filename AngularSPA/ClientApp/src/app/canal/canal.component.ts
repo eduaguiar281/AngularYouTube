@@ -62,7 +62,6 @@ export class CanalComponent {
             service = service + '&queryString=' + this.searchQuery;
         }
 
-
         this._http.get<ResultSet>(this._baseUrl + service).subscribe(result => {
             this.resposta = result;
             this.displayPageIndex = result.pageIndex + 1;
@@ -87,6 +86,11 @@ export class CanalComponent {
         }
     }
 
+    public onPageSizeChange(newValue) {
+        this.pageSize = newValue;
+        this.pageIndex = 0;
+        this.startSearch();
+    }
 
 }
 

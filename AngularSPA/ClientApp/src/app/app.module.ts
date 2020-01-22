@@ -11,6 +11,7 @@ import { YoutubeSearchComponent } from './youtube-search/youtube-search.componen
 import { CanalComponent } from './canal/canal.component';
 import { CanalDetailsComponent } from './canal-details/canal-details.component';
 import { VideoComponent } from './video/video.component';
+import { VideoDetailsComponent } from './video-details/video-details.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { VideoComponent } from './video/video.component';
     YoutubeSearchComponent,
     CanalComponent,
     CanalDetailsComponent,
-    VideoComponent
+    VideoComponent,
+    VideoDetailsComponent
 
   ],
   imports: [
@@ -33,6 +35,7 @@ import { VideoComponent } from './video/video.component';
       { path: 'canal', component: CanalComponent },
       { path: 'canal-details', component: CanalDetailsComponent },
       { path: 'video', component: VideoComponent },
+      { path: 'video-details', component: VideoDetailsComponent },
     ])
   ],
   providers: [],

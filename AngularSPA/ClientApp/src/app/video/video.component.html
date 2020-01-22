@@ -1,3 +1,8 @@
+<script>
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
 <h1 id="tableLabel">Histórico de Busca de Vídeos do YouTube</h1>
 
 <div class="input-group mb-3">
@@ -10,7 +15,7 @@
   <div class="col-sm-2">
     <div class="form-group">
       <label for="optPageSize">Resultados por Página</label>
-      <select class="form-control" id="optPageSize" [(ngModel)]="pageSize" (onChange)="startSearch()">
+      <select class="form-control" id="optPageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event.target.value)">
         <option>5</option>
         <option>10</option>
         <option>20</option>
@@ -38,22 +43,25 @@
         <img class="card-img-bottom" [src]="item.imagemUrl" alt="Card image cap">
       </div>
       <div style="width: 60%; margin: 0 auto; text-align: left">
-        <h5 class="card-title">Vídeo: {{ item.title }}</h5>
-        <p class="card-text">{{ item.descricao }}</p>
+        <h5 class="card-title">Vídeo: {{ item.titulo }}</h5>
+        <p class="card-text">{{ truncateText(item.descricao, 280) }}</p>
         <p class="card-text"><small class="text-muted">Publicado em: {{ item.publicadoEm | date: 'dd/MM/yyyy hh:mm' }}</small></p>
         <div class="row">
             <div class="col-sm-3">
-              <i class='far fa-comments'></i>
-              <i style='font-size:24px' class='far'>&#xf086; {{quantidadeComentario}}</i>
+                <img class="icon-page" data-toggle="tooltip" data-placement="top" title="Comentários!" src="/custom-content/dialogue.svg" />
+                <span class="badge badge-primary page-badge" data-toggle="tooltip" data-placement="top" title="Comentários!">{{item.quantidadeComentario}}</span>
             </div>
             <div class="col-sm-3">
-              <i style='font-size:24px' class='far'>&#xf164; {{quantidadeLike}}</i>
+                <img class="icon-page" src="/custom-content/like.svg" data-toggle="tooltip" data-placement="top" title="Curtidas!"/>
+                <span class="badge badge-success page-badge" data-toggle="tooltip" data-placement="top" title="Curtidas!">{{item.quantidadeLike}}</span>
             </div>
             <div class="col-sm-3">
-              <i style='font-size:24px' class='far'>&#xf165; {{quantidadeDeslike}}</i>
+                <img class="icon-page page-badge" src="/custom-content/bad.svg" data-toggle="tooltip" data-placement="top" title="Rejeição"/>
+                <span class="badge badge-danger page-badge" data-toggle="tooltip" data-placement="top" title="Rejeição">{{item.quantidadeDeslike}}</span>
             </div>
             <div class="col-sm-3">
-              <i style='font-size:24px' class='far'>&#xf144; {{quantidadeVisualizacao}}</i>
+                <img class="icon-page" src="/custom-content/eye.svg" data-toggle="tooltip" data-placement="top" title="Visualização"/>
+                <span class="badge badge-primary page-badge" data-toggle="tooltip" data-placement="top" title="Visualização">{{item.quantidadeVisualizacao}}</span>
             </div>
         </div>
         <button type="button" class="btn btn-outline-secondary" style="margin-top:5px" (click)="gotoDetails(item)">Detalhes</button>
@@ -68,3 +76,4 @@
     </ul>
   </div>
 </div>
+

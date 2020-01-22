@@ -10,7 +10,7 @@
   <div class="col-sm-2">
     <div class="form-group">
       <label for="optPageSize">Resultados por Página</label>
-      <select class="form-control" id="optPageSize" [(ngModel)]="pageSize">
+      <select class="form-control" id="optPageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event.target.value)">
         <option>5</option>
         <option>10</option>
         <option>20</option>
