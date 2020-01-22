@@ -24,6 +24,12 @@ namespace YouTubeApp.Services
 
         public async Task<SearchListResponse> SearchAsync(string query, int maxResusts)
         {
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException(nameof(query));
+
+            if (maxResusts == 0)
+                throw new ArgumentException("Valor informado não pode ser zero!", nameof(maxResusts));
+
             var searchListRequest = _service.Search.List("snippet");
             searchListRequest.Q = query;
             searchListRequest.MaxResults = maxResusts;

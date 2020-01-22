@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngularSPA", "AngularSPA\AngularSPA.csproj", "{917A7665-F772-4D96-80E5-116EF9678BF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeApp.Core", "YoutubeApp.Core\YoutubeApp.Core.csproj", "{9A32AE3F-C008-4FEE-B070-42EB24CC1B95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoutubeApp.Core", "YoutubeApp.Core\YoutubeApp.Core.csproj", "{9A32AE3F-C008-4FEE-B070-42EB24CC1B95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeApp.Data", "YouTubeApp.Data\YouTubeApp.Data.csproj", "{0022CB65-7007-4A7F-92F5-E7000B9FD8B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouTubeApp.Data", "YouTubeApp.Data\YouTubeApp.Data.csproj", "{0022CB65-7007-4A7F-92F5-E7000B9FD8B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTube.Services", "YouTube.Services\YouTube.Services.csproj", "{B8325946-1F5D-4B2B-89AC-47112C8AB5AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouTube.Services", "YouTube.Services\YouTube.Services.csproj", "{B8325946-1F5D-4B2B-89AC-47112C8AB5AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTubeApp.Service.Test", "YouTubeApp.Service.Test\YouTubeApp.Service.Test.csproj", "{4AF34438-FCB5-48FA-A208-1C308CF6BECD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B8325946-1F5D-4B2B-89AC-47112C8AB5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8325946-1F5D-4B2B-89AC-47112C8AB5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8325946-1F5D-4B2B-89AC-47112C8AB5AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF34438-FCB5-48FA-A208-1C308CF6BECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF34438-FCB5-48FA-A208-1C308CF6BECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF34438-FCB5-48FA-A208-1C308CF6BECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF34438-FCB5-48FA-A208-1C308CF6BECD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
