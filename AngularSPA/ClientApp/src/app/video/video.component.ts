@@ -28,6 +28,7 @@ export class VideoComponent {
 
 
     }
+
     _http: HttpClient;
     _baseUrl: string;
     public resposta: ResponseVideo;

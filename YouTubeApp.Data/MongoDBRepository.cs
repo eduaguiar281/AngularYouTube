@@ -216,6 +216,15 @@ namespace YouTubeApp.Data
             return await _collection.CountDocumentsAsync(where);
         }
 
+        public virtual async Task<T> GetSingleAsync()
+        {
+            return await Table.FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await Table.FirstOrDefaultAsync(predicate);
+        }
 
         #endregion
 
@@ -230,6 +239,7 @@ namespace YouTubeApp.Data
         {
             return _collection.Find(query).ToList();
         }
+
 
         #endregion
     }

@@ -10,7 +10,7 @@ namespace YouTubeApp.Services
     {
         Task<YouTubeResponseViewModel> SearchAsync(string query, int maxResults);
         Task<YouTubeResponseViewModel> SearchAsync(string query, string pageToken, int maxResults);
-        Task<IList<CanalSearchResultViewModel>> GetChannelsByIdsAsync(List<string> ids);
+        //Task<IList<CanalSearchResultViewModel>> GetChannelsByIdsAsync(List<string> ids);
         Task<IList<VideoSearchResultViewModel>> GetVideosByIdsAsync(List<string> ids);
     }
 }

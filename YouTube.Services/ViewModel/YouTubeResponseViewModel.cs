@@ -7,6 +7,11 @@ namespace YouTubeApp.Services.ViewModel
 {
     public class YouTubeResponseViewModel  
     {
+        public YouTubeResponseViewModel()
+        {
+            IsSuccess = true;
+        }
+
         public IList<ISearchResultViewModel> Items { get; set; }
 
         public string Query { get; set; }
@@ -14,5 +19,7 @@ namespace YouTubeApp.Services.ViewModel
         public string NextPageToken { get; set; }
 
         public string PriorPageToken { get; set; }
+
+        public bool IsSuccess { get; set; }
     }
 }

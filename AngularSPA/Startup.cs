@@ -36,7 +36,6 @@ namespace AngularSPA
             });
             services.AddSingleton<IMongoDBContext, MongoDBContext>();
             services.AddTransient(typeof(IRepository<>), typeof(MongoDBRepository<>));
-            services.AddTransient<IYouTubeClient, YouTubeClient>();
             services.AddTransient<IYouTubeService, YouTubeService>();
             services.AddTransient<ICanalService, CanalService>();
             services.AddTransient<IVideoService, VideoService>();

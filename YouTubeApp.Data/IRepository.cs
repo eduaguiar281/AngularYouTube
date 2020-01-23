@@ -164,5 +164,8 @@ namespace YouTubeApp.Data
         /// <returns></returns>
         IList<T> FindByFilterDefinition(FilterDefinition<T> query);
 
+        Task<T> GetSingleAsync();
+        Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate);
+
     }
 }

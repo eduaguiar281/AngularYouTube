@@ -8,20 +8,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using YouTubeApp.Services;
+using YouTubeApp.Services.ViewModel;
 
 namespace YouTubeApp.Service.Test
 {
     [TestFixture]
     public class YouTubeClientTest
     {
-        private IYouTubeClient _youtubeClient;
-        private IYouTubeClient _youtubeClientComChaveErrada;
+        private IYouTubeService _youtubeService;
+        private IYouTubeService _youtubeClientComChaveErrada;
 
         const string _SEARCH_QUERY = "Pop Musics";
         const string _QUERY_PARAM_NAME = "query";
         const string _MAXRESULTS_PARAM_NAME = "maxResults";
-        const string _VIDEOS_IDS_PARAM_NAME = "videosIds";
-        const string _CHANNEL_IDS_PARAM_NAME = "channelIds";
+        const string _VIDEOS_IDS_PARAM_NAME = "ids";
 
         [SetUp]
         public void Setup()
@@ -40,12 +40,12 @@ namespace YouTubeApp.Service.Test
 
             configuration.Setup(a => a.GetSection("YouTubeConfig")).Returns(youTubeConfigSection.Object);
 
-            _youtubeClient = new YouTubeClient(configuration.Object);
+            _youtubeService = new YouTubeService(configuration.Object);
             
             apiKeySection.Setup(a => a.Value).Returns("CHAVE_ERRADA");
             youTubeConfigSection.Setup(a => a.GetSection("APIKEY")).Returns(apiKeySection.Object);
             configuration.Setup(a => a.GetSection("YouTubeConfig")).Returns(youTubeConfigSection.Object);
-            _youtubeClientComChaveErrada = new YouTubeClient(configuration.Object);
+            _youtubeClientComChaveErrada = new YouTubeService(configuration.Object);
         }
 
         #region SearchAsync()
@@ -55,7 +55,7 @@ namespace YouTubeApp.Service.Test
         {
             try
             {
-                await _youtubeClient.SearchAsync(null, 10);
+                await _youtubeService.SearchAsync(null, 10);
                 Assert.Fail();
             }
             catch(ArgumentNullException ex)
@@ -69,7 +69,7 @@ namespace YouTubeApp.Service.Test
         {
             try
             {
-                await _youtubeClient.SearchAsync(_SEARCH_QUERY, 0);
+                await _youtubeService.SearchAsync(_SEARCH_QUERY, 0);
                 Assert.Fail();
             }
             catch (ArgumentException ex)
@@ -81,16 +81,8 @@ namespace YouTubeApp.Service.Test
         [Test]
         public async Task SearchAsync_Falha_Requisicao()
         {
-            try
-            {
-                await _youtubeClientComChaveErrada.SearchAsync(_SEARCH_QUERY, 5);
-                Assert.Fail();
-            }
-            catch (GoogleApiException)
-            {
-
-                Assert.Pass();
-            }
+            YouTubeResponseViewModel result = await _youtubeClientComChaveErrada.SearchAsync(_SEARCH_QUERY, 5);
+            Assert.AreEqual(false, result.IsSuccess);
         }
 
         [Test]
@@ -98,7 +90,7 @@ namespace YouTubeApp.Service.Test
         {
             try
             {
-                await _youtubeClient.SearchAsync(null, "CSDFEX", 10);
+                await _youtubeService.SearchAsync(null, "SomeValue", 10);
             }
             catch (ArgumentNullException ex)
             {
@@ -111,7 +103,7 @@ namespace YouTubeApp.Service.Test
         {
             try
             {
-                await _youtubeClient.SearchAsync(_SEARCH_QUERY, "CSDFEX", 0);
+                await _youtubeService.SearchAsync(_SEARCH_QUERY, "SomeValue", 0);
                 Assert.Fail();
             }
             catch (ArgumentException ex)
@@ -123,16 +115,8 @@ namespace YouTubeApp.Service.Test
         [Test]
         public async Task SearchAsync_Paging_Falha_Requisicao()
         {
-            try
-            {
-                await _youtubeClientComChaveErrada.SearchAsync(_SEARCH_QUERY, "CSDFEX", 5);
-                Assert.Fail();
-            }
-            catch (GoogleApiException)
-            {
-
-                Assert.Pass();
-            }
+            YouTubeResponseViewModel result = await _youtubeClientComChaveErrada.SearchAsync(_SEARCH_QUERY, "SomeValue", 5);
+            Assert.AreEqual(false, result.IsSuccess);
         }
 
         #endregion
@@ -144,10 +128,25 @@ namespace YouTubeApp.Service.Test
         {
             try
             {
-                await _youtubeClient.GetVideoListAsync(null);
+                await _youtubeService.GetVideosByIdsAsync(null);
                 Assert.Fail();
             }
             catch(ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == _VIDEOS_IDS_PARAM_NAME);
+            }
+        }
+
+        [Test]
+        public async Task GetVideoListAsync_VideoIds_Sem_elementos()
+        {
+            var ids = new List<string>();
+            try
+            {
+                await _youtubeService.GetVideosByIdsAsync(ids);
+                Assert.Fail();
+            }
+            catch (ArgumentException ex)
             {
                 Assert.IsTrue(ex.ParamName == _VIDEOS_IDS_PARAM_NAME);
             }
@@ -158,7 +157,7 @@ namespace YouTubeApp.Service.Test
         {
             try
             {
-                await _youtubeClientComChaveErrada.GetVideoListAsync("PYRbC7vDxio, jOx0JEC_3P4");
+                await _youtubeClientComChaveErrada.GetVideosByIdsAsync(new List<string> { "PYRbC7vDxio", "jOx0JEC_3P4" });
                 Assert.Fail();
             }
             catch (GoogleApiException)
@@ -168,39 +167,6 @@ namespace YouTubeApp.Service.Test
         }
 
         #endregion
-
-        #region GetChannelListAsync
-
-        [Test]
-        public async Task GetChannelListAsync_ChannelIds_Is_Null()
-        {
-            try
-            {
-                await _youtubeClient.GetChannelListAsync(null);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Assert.IsTrue(ex.ParamName == _CHANNEL_IDS_PARAM_NAME);
-            }
-        }
-
-        [Test]
-        public async Task GetChannelListAsync_Falha_Requisicao()
-        {
-            try
-            {
-                await _youtubeClientComChaveErrada.GetChannelListAsync("UCmqofm6gSYnyOG1KLRDLULA, UCJB5n0L-Iu8OGwh1anOt8Uw");
-                Assert.Fail();
-            }
-            catch (GoogleApiException)
-            {
-                Assert.Pass();
-            }
-        }
-
-        #endregion
-
 
     }
 }

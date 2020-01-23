@@ -11,7 +11,7 @@ using YouTube.Services;
 
 namespace YouTubeApp.Services
 {
-    public class YouTubeClient : IYouTubeClient
+    internal class YouTubeClient 
     {
         private readonly Google.Apis.YouTube.v3.YouTubeService _service;
 
@@ -49,9 +49,6 @@ namespace YouTubeApp.Services
 
         public async Task<VideoListResponse> GetVideoListAsync(string videosIds)
         {
-            if (string.IsNullOrEmpty(videosIds))
-                throw new ArgumentNullException(nameof(videosIds));
-
             var listRequest = _service.Videos.List("id, snippet, contentDetails, recordingDetails, statistics, status");
             listRequest.Id = videosIds;
             return await listRequest.ExecuteAsync();
@@ -59,16 +56,6 @@ namespace YouTubeApp.Services
 
         public async Task<SearchListResponse> SearchAsync(string query, string pageToken, int maxResults)
         {
-            if (string.IsNullOrEmpty(query))
-                throw new ArgumentNullException(nameof(query));
-
-            if (maxResults == 0)
-                throw new ArgumentException("Valor informado não pode ser zero!", nameof(maxResults));
-
-            if (string.IsNullOrEmpty(pageToken))
-                throw new ArgumentNullException(nameof(pageToken));
-
-
             var searchListRequest = _service.Search.List("snippet");
             searchListRequest.Q = query;
             searchListRequest.PageToken = pageToken;

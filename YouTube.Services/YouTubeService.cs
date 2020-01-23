@@ -1,4 +1,6 @@
-﻿using Google.Apis.YouTube.v3.Data;
+﻿using Google;
+using Google.Apis.YouTube.v3.Data;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,41 +11,92 @@ namespace YouTubeApp.Services
 {
     public class YouTubeService : IYouTubeService
     {
-        private IYouTubeClient _client;
+        private YouTubeClient _client;
 
-        public YouTubeService(IYouTubeClient client)
+        public YouTubeService(IConfiguration configuration)
         {
-            _client = client;
+            _client = new YouTubeClient(configuration);
         }
 
         public async Task<YouTubeResponseViewModel> SearchAsync(string query, int maxResults)
         {
-            var response = await _client.SearchAsync(query, maxResults);
-            return await ReadResponse(response);
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException(nameof(query));
+
+            if (maxResults == 0)
+                throw new ArgumentException("Valor informado não pode ser zero!", nameof(maxResults));
+
+            try
+            {
+                var response = await _client.SearchAsync(query, maxResults);
+                return await ReadResponse(response);
+            }
+            catch (GoogleApiException)
+            {
+                return new YouTubeResponseViewModel()
+                {
+                    IsSuccess = false
+                };
+            }
+            
         }
 
         public async Task<YouTubeResponseViewModel> SearchAsync(string query, string pageToken, int maxResults)
         {
-            var response = await _client.SearchAsync(query, pageToken, maxResults);
-            return await ReadResponse(response);
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException(nameof(query));
+
+            if (maxResults == 0)
+                throw new ArgumentException("Valor informado não pode ser zero!", nameof(maxResults));
+
+            if (string.IsNullOrEmpty(pageToken))
+                throw new ArgumentNullException(nameof(pageToken));
+            try
+            {
+                var response = await _client.SearchAsync(query, pageToken, maxResults);
+                return await ReadResponse(response);
+            }
+            catch (GoogleApiException)
+            {
+                return new YouTubeResponseViewModel()
+                {
+                    IsSuccess = false
+                };
+
+            }
+
+
+
         }
 
-        public async Task<IList<CanalSearchResultViewModel>> GetChannelsByIdsAsync(List<string> ids)
-        {
-            var result = new List<CanalSearchResultViewModel>();
-            var channelIds = String.Join(", ", ids.ToArray());
-            var response = await _client.GetChannelListAsync(channelIds);
-            if (response == null || response.Items.Count == 0)
-                return result;
+        //public async Task<IList<CanalSearchResultViewModel>> GetChannelsByIdsAsync(List<string> ids)
+        //{
+        //    if (ids == null)
+        //        throw new ArgumentNullException(nameof(ids));
 
-            foreach (Channel channel in response.Items)
-                result.Add(CreateCanalViewModel(channel));
+        //    if (ids.Count == 0)
+        //        throw new ArgumentException("Nenhum id foi encontrado na lista", nameof(ids));
 
-            return result;
-        }
+        //    var result = new List<CanalSearchResultViewModel>();
+        //    var channelIds = String.Join(", ", ids.ToArray());
+        //    var response = await _client.GetChannelListAsync(channelIds);
+        //    if (response == null || response.Items.Count == 0)
+        //        return result;
+
+        //    foreach (Channel channel in response.Items)
+        //        result.Add(CreateCanalViewModel(channel));
+
+        //    return result;
+        //}
 
         public async Task<IList<VideoSearchResultViewModel>> GetVideosByIdsAsync(List<string> ids)
         {
+            if (ids == null)
+                throw new ArgumentNullException(nameof(ids));
+
+            if (ids.Count == 0)
+                throw new ArgumentException("Nenhum id foi encontrado na lista", nameof(ids));
+
             var result = new List<VideoSearchResultViewModel>();
             var videoIds = String.Join(", ", ids.ToArray());
             var response = await _client.GetVideoListAsync(videoIds);
