@@ -19,14 +19,21 @@ namespace YouTubeApp.Service.Test
         [SetUp]
         public void Setup()
         {
-            var mockConfSection = new Mock<IConfigurationSection>();
-            mockConfSection.SetupGet(m => m[It.Is<string>(s => s == "APIKEY")]).Returns("AIzaSyAy_0a0bVHWj60mHEmPIK-lS_Ip0dAmQcE");
-            mockConfSection.SetupGet(m => m[It.Is<string>(s => s == "ClientApplicationName")]).Returns("YouTubeApp");
+            var configuration = new Mock<IConfiguration>();
 
-            var mockConfiguration = new Mock<IConfiguration>();
-            mockConfiguration.Setup(a => a.GetSection(It.Is<string>(s => s == "YouTubeConfig"))).Returns(mockConfSection.Object);
-            mockConfiguration.SetupGet(a => a.GetSection(It.Is<string>(s => s == "YouTubeConfig"))).Returns(mockConfSection.Object);
-            _youtubeClient = new YouTubeClient(mockConfiguration.Object);
+            var apiKeySection = new Mock<IConfigurationSection>();
+            apiKeySection.Setup(a => a.Value).Returns("AIzaSyAy_0a0bVHWj60mHEmPIK-lS_Ip0dAmQcE");
+
+            var clientApplicationNameSection = new Mock<IConfigurationSection>();
+            clientApplicationNameSection.Setup(a => a.Value).Returns("YouTubeApp");
+
+            var youTubeConfigSection = new Mock<IConfigurationSection>();
+            youTubeConfigSection.Setup(a => a.GetSection("APIKEY")).Returns(apiKeySection.Object);
+            youTubeConfigSection.Setup(a => a.GetSection("ClientApplicationName")).Returns(clientApplicationNameSection.Object);
+
+            configuration.Setup(a => a.GetSection("YouTubeConfig")).Returns(youTubeConfigSection.Object);
+
+            _youtubeClient = new YouTubeClient(configuration.Object);
         }
 
         [Test]
