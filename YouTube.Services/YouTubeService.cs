@@ -62,11 +62,7 @@ namespace YouTubeApp.Services
                 {
                     IsSuccess = false
                 };
-
             }
-
-
-
         }
 
         public async Task<IList<VideoSearchResultViewModel>> GetVideosByIdsAsync(List<string> ids)

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AngularSPA.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using YouTube.Services;
 using YouTubeApp.Services;
 using YouTubeApp.Services.ViewModel;
 
@@ -32,14 +33,24 @@ namespace YouTubeApp.Controllers
         public async Task<IActionResult> Get(string query, string pageToken)
         {
             YouTubeResponseViewModel result = await _youTubeService.SearchAsync(query, pageToken, pageSize);
-
-
-            await GravarHistoricoCanal(result);
-            await GravarHistoricoVideos(result);
-            return Ok(new ResponseRoot<YouTubeResponseViewModel>()
+            if (!result.IsSuccess)
+                return BadRequest(CreateBadRequest("Não foi possível obter informações do YouTube!"));
+            try
             {
-                Data = result
-            });
+                return Ok(await GravarHistoricos(result));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(CreateBadRequest(ex.Message));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(CreateBadRequest(ex.Message));
+            }
+            catch (ServiceException ex)
+            {
+                return BadRequest(CreateBadRequest(ex.Message));
+            }
         }
 
         [HttpGet]
@@ -47,14 +58,47 @@ namespace YouTubeApp.Controllers
         public async Task<IActionResult> Get(string query)
         {
             YouTubeResponseViewModel result =  await _youTubeService.SearchAsync(query, pageSize);
+            if (!result.IsSuccess)
+                return BadRequest(CreateBadRequest("Não foi possível obter informações do YouTube!"));
+            try
+            {
+                return Ok(await GravarHistoricos(result));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(CreateBadRequest(ex.Message));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(CreateBadRequest(ex.Message));
+            }
+            catch (ServiceException ex)
+            {
+                return BadRequest(CreateBadRequest(ex.Message));
+            }
+        }
+
+        private async Task<ResponseRoot<YouTubeResponseViewModel>> GravarHistoricos(YouTubeResponseViewModel result)
+        {
             await GravarHistoricoCanal(result);
             await GravarHistoricoVideos(result);
-            return Ok(new ResponseRoot<YouTubeResponseViewModel>()
+            return new ResponseRoot<YouTubeResponseViewModel>()
             {
                 Data = result
-            });
+            };
+
         }
-        
+
+
+        private ResponseRoot<YouTubeResponseViewModel> CreateBadRequest(string message)
+        {
+            return new ResponseRoot<YouTubeResponseViewModel>()
+            {
+                Success = false,
+                Message = message
+            };
+        }
+
         private async Task GravarHistoricoCanal(YouTubeResponseViewModel result)
         {
             var lista = result.Items
