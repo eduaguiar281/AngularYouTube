@@ -69,26 +69,6 @@ namespace YouTubeApp.Services
 
         }
 
-        //public async Task<IList<CanalSearchResultViewModel>> GetChannelsByIdsAsync(List<string> ids)
-        //{
-        //    if (ids == null)
-        //        throw new ArgumentNullException(nameof(ids));
-
-        //    if (ids.Count == 0)
-        //        throw new ArgumentException("Nenhum id foi encontrado na lista", nameof(ids));
-
-        //    var result = new List<CanalSearchResultViewModel>();
-        //    var channelIds = String.Join(", ", ids.ToArray());
-        //    var response = await _client.GetChannelListAsync(channelIds);
-        //    if (response == null || response.Items.Count == 0)
-        //        return result;
-
-        //    foreach (Channel channel in response.Items)
-        //        result.Add(CreateCanalViewModel(channel));
-
-        //    return result;
-        //}
-
         public async Task<IList<VideoSearchResultViewModel>> GetVideosByIdsAsync(List<string> ids)
         {
             if (ids == null)

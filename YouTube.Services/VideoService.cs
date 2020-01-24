@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using YouTube.Services;
 using YouTubeApp.Core.Models;
 using YouTubeApp.Data;
 using YouTubeApp.Services.ViewModel;
@@ -23,12 +24,30 @@ namespace YouTubeApp.Services
 
         public async Task SincronizarVideosAsync(IList<VideoSearchResultViewModel> videos)
         {
-            foreach(VideoSearchResultViewModel video in videos)
+            if (videos == null)
+                throw new ArgumentNullException(nameof(videos));
+
+            if (videos.Count == 0)
+                throw new ArgumentException("Lista de videos não contém elementos", nameof(videos));
+
+            foreach (VideoSearchResultViewModel video in videos)
             {
-                var videoDb = await _repository.Table.FirstOrDefaultAsync(w => w.VideoId == video.YoutubeVideoId);
+                if (string.IsNullOrEmpty(video.YoutubeVideoId))
+                    throw new ServiceException($"Propriedade {nameof(video.YoutubeVideoId)} não pode ser nula!");
+                if (string.IsNullOrEmpty(video.YoutubeChannelId))
+                    throw new ServiceException($"Propriedade {nameof(video.YoutubeChannelId)} não pode ser nula!");
+                if (string.IsNullOrEmpty(video.Titulo))
+                    throw new ServiceException($"Propriedade {nameof(video.Titulo)} não pode ser nula!");
+                if (string.IsNullOrEmpty(video.Descricao))
+                    throw new ServiceException($"Propriedade {nameof(video.Descricao)} não pode ser nula!");
+
+                var videoDb = await _repository.GetSingleAsync(w => w.VideoId == video.YoutubeVideoId);
                 if (videoDb == null)
                 {
                     var canalDb = await _canalService.GetCanalByYoutubeId(video.YoutubeChannelId);
+                    if (canalDb == null)
+                        throw new ServiceException($"Canal informado {nameof(video.YoutubeChannelId)}: {video.YoutubeChannelId} não foi localizado!");
+
                     videoDb = new Video()
                     {
                         CriadoEm = DateTime.Now,
@@ -70,6 +89,9 @@ namespace YouTubeApp.Services
 
         public async Task<Video> GetVideoByYoutubeId(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
             return await _repository.GetByIdAsync(id);
         }
 
@@ -79,11 +101,17 @@ namespace YouTubeApp.Services
         }
         public async Task<IList<Video>> GetVideosAsync(Expression<Func<Video, bool>> predicate)
         {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             return await _repository.Table.Where(predicate).ToListAsync();
         }
 
         public async Task<Video> GetVideoByIdAsync(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
             return await _repository.GetByIdAsync(id);
         }
 

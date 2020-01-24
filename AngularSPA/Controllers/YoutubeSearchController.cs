@@ -32,6 +32,8 @@ namespace YouTubeApp.Controllers
         public async Task<IActionResult> Get(string query, string pageToken)
         {
             YouTubeResponseViewModel result = await _youTubeService.SearchAsync(query, pageToken, pageSize);
+
+
             await GravarHistoricoCanal(result);
             await GravarHistoricoVideos(result);
             return Ok(new ResponseRoot<YouTubeResponseViewModel>()

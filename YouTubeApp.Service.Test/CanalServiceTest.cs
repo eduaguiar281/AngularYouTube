@@ -22,12 +22,9 @@ namespace YouTubeApp.Service.Test
     {
         const string _CANAL_ID_PARAM_NAME = "id";
         const string _CANAL_LIST_PARAM_NAME = "canais";
+        const string _CANAL_PREDICATE_PARAM_NAME = "predicate";
 
         private ICanalService _service;
-        private List<CanalSearchResultViewModel> canalSemChannelId = new List<CanalSearchResultViewModel>() { new CanalSearchResultViewModel() };
-        private List<CanalSearchResultViewModel> canalSemTitulo = new List<CanalSearchResultViewModel>() { new CanalSearchResultViewModel() { YoutubeChannelId = "SomeValue" } };
-        private List<CanalSearchResultViewModel> canalSemDescricao = new List<CanalSearchResultViewModel>() { new CanalSearchResultViewModel() { YoutubeChannelId = "SomeValue", Titulo = "SomeValue" } };
-        private List<CanalSearchResultViewModel> canalNew = new List<CanalSearchResultViewModel>() { new CanalSearchResultViewModel() { YoutubeChannelId = "NewSomeValue", Titulo = "SomeValue", Descricao = "SomeValue" } };
 
 
         [SetUp]
@@ -35,11 +32,16 @@ namespace YouTubeApp.Service.Test
         {
             var mockMongoCollection = new Mock<IMongoCollection<Canal>>().Object;
             var canal = new Canal() { ChannelId = "SomeValue", Title = "SomeValue", Descricao = "SomeValue" };
-            mockMongoCollection.InsertOne(canal);
+            var lista = new List<Canal>() { canal }.AsQueryable();
+
             Mock<IRepository<Canal>> mock = new Mock<IRepository<Canal>>();
 
             mock.Setup(r => r.Table).Returns(mockMongoCollection.AsQueryable());
             mock.Setup(r => r.GetSingleAsync()).Returns(Task.FromResult(canal));
+
+            mock.Setup(r => r.GetSingleAsync(It.IsAny<Expression<Func<Canal, bool>>>()))
+                .Returns((Expression<Func<Canal, bool>> predicate) => Task.FromResult(lista.FirstOrDefault(predicate)));
+
             _service = new CanalService(mock.Object);
         }
 
@@ -114,6 +116,39 @@ namespace YouTubeApp.Service.Test
             var canais = new List<CanalSearchResultViewModel>() { new CanalSearchResultViewModel() { YoutubeChannelId = channelId, Titulo = titulo, Descricao = descricao } };
             await _service.SincronizarCanaisAsync(canais);
             Assert.Pass();
+        }
+
+        #endregion
+
+        #region GetCanaisAsync    
+        public async Task GetCanaisAsync_predicate_Is_Null()
+        {
+            try
+            {
+                await _service.GetCanaisAsync(null);
+                Assert.Fail();
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == _CANAL_PREDICATE_PARAM_NAME);
+            }
+        }
+
+        #endregion
+
+        #region GetCanalByIdAsync
+
+        public async Task GetCanalByIdAsync_predicate_Is_Null()
+        {
+            try
+            {
+                await _service.GetCanalByIdAsync(null);
+                Assert.Fail();
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == _CANAL_ID_PARAM_NAME);
+            }
         }
 
         #endregion
